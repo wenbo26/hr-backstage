@@ -1,9 +1,11 @@
 import Vue from 'vue'
 
+// 重置 CSS 样式
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+// 导入语言包
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
 import '@/styles/index.scss' // global css
