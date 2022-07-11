@@ -8,15 +8,15 @@
         </h3>
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="mobile">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          ref="username"
-          v-model="loginForm.username"
-          placeholder="Username"
-          name="username"
+          ref="mobile"
+          v-model="loginForm.mobile"
+          placeholder="请输入您的手机号"
+          name="mobile"
           type="text"
           tabindex="1"
           auto-complete="on"
@@ -32,7 +32,7 @@
           ref="password"
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="请您输入密码"
           name="password"
           tabindex="2"
           auto-complete="on"
@@ -43,7 +43,12 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button
+        :loading="loading"
+        type="primary"
+        style="width:100%;margin-bottom:30px;"
+        @click.native.prevent="handleLogin"
+      >登录</el-button>
 
       <div class="tips">
         <span style="margin-right:20px;">超级管理员账号: 13800000002</span>
@@ -55,33 +60,39 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import { validMobile } from '@/utils/validate'
 
 export default {
   name: 'Login',
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+    // 做表单校验
+    // 参数1: 没用 规则对象
+    // 参数2: 校验项的数据值
+    // 参数3: 决定是否通过校验的回调函数
+    const validateMobile = (rule, value, callback) => {
+      if (!validMobile(value)) {
+        callback(new Error('请输入正确的手机号'))
       } else {
         callback()
       }
     }
     return {
+      // 做表单校验时，最好是和后端的接口保持一致
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        mobile: '13800000002',
+        password: '123456'
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        mobile: [
+          { required: true, message: '手机号不能为空', trigger: ['blur', 'change'] },
+          // { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号', trigger: ['blur', 'change'] }
+          // 学习花裤衩子的封装思想
+          { validator: validateMobile, trigger: ['blur', 'change'] }
+        ],
+        password: [
+          { required: true, message: '密码不能为空', trigger: ['blur', 'change'] },
+          { min: 6, max: 16, message: '密码的长度为 6 ~ 16 位之间', trigger: ['blur', 'change'] }
+        ]
       },
       loading: false,
       passwordType: 'password',
