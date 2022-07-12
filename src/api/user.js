@@ -23,9 +23,22 @@
 //   })
 // }
 
-// import request from '@/utils/request'
+// request => axios
+import request from '@/utils/request'
 
+/**
+ * 登录 API
+ * @param {Object} data 登录需要的参数对象, 需要 mobile 和 password
+ * @returns 请求的结果, promise 对象
+ */
 export function login(data) {
+  // 用 axios 发请求
+  // login().then()
+  return request({ // axios 调用的结果是 promise 对象
+    method: 'post',
+    url: '/sys/login',
+    data
+  })
 }
 
 export function getInfo(token) {

@@ -36,7 +36,7 @@
           name="password"
           tabindex="2"
           auto-complete="on"
-          @keyup.enter.native="handleLogin"
+          @keyup.enter.native="hLogin"
         />
         <span class="show-pwd" @click="showPwd">
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
@@ -47,7 +47,7 @@
         :loading="loading"
         type="primary"
         style="width:100%;margin-bottom:30px;"
-        @click.native.prevent="handleLogin"
+        @click.native.prevent="hLogin"
       >登录</el-button>
 
       <div class="tips">
@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import { login } from '@/api/user'
 import { validMobile } from '@/utils/validate'
 
 export default {
@@ -118,21 +119,20 @@ export default {
         this.$refs.password.focus()
       })
     },
-    handleLogin() {
+    hLogin() {
       this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
-            this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
+        if (!valid) return
+        this.doLogin()
       })
+    },
+    async doLogin() {
+      try {
+        // 通过校验后发请求
+        const { data: res } = await login(this.loginForm)
+        console.log(res)
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 }
